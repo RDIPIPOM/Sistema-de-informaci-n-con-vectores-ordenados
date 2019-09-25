@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Shop</h1>
+    </header>
+    <section>
+        <h2>Opciones</h2>
+        <!--Add product-->
+        <h3>Agregar producto</h3>
+        <form>
+            <label for="code">Código: </label>
+            <input id="code" type="number" value="1" disabled>
+            <label for="name">Nombre: </label>
+            <input id="name" type="text" value="Producto 1">
+            <label for="cost">Precio: </label>
+            <input id="cost" type="number" value="1000">
+            <label for="stock">Cantidad: </label>
+            <input id="stock" type="number" value="5">
+            <label for="description">Descripción: </label>
+            <input id="description" type="text" value="Alguna descripción 1">
+            <label for="position">Posición: </label>
+            <input id="position" type="number" min="1">
+            <button id="btnAdd" type="button">Agregar</button>
+        </form>
+        <!--Query product-->
+        <h3>Buscar producto</h3>
+        <form>
+            <label for="queryByCode">Código: </label>
+            <input id="queryByCode" type="number">
+            <button id="btnQuery" type="button">Buscar</button>
+            <div id="productFound"></div>
+        </form>
+        <!--Delete product-->
+        <h3>Eliminar producto</h3>
+        <form>
+            <label for="deleteByCode">Código: </label>
+            <input id="deleteByCode" type="number">
+            <button id="btnDelete" type="button">Eliminar</button>
+        </form>
+        <br>
+        <!--Create report-->
+        <div id="separation">
+            <button id="btnCreateReport">Generar reporte</button>
+        </div>
+    </section>
+    <!--Aside-->
+    <aside>
+        <h2>Reporte</h2>
+        <article id="articleReport"></article>
+    </aside>
+</body>
+<script src="./main.js" type="module"></script>
+
+</html>
