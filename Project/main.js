@@ -1,29 +1,41 @@
 import Structure from "./Structure.js";
+import Product from "./Product.js";
 
-var inventory = new Structure(new Array(), document.querySelector('#articleReport'));
+var inventory = new Structure(new Array(20));
+var tagArticle = document.querySelector('#articleReport');
 
 //Button Add
 document.querySelector('#btnAdd').addEventListener('click', () => {
-    let position = document.querySelector('#position').value;
+    let code = Number(document.querySelector('#code').value);
     let name = document.querySelector('#name').value;
-    let cost = document.querySelector('#cost').value;
-    let stock = document.querySelector('#stock').value;
+    let cost = Number(document.querySelector('#cost').value);
+    let stock = Number(document.querySelector('#stock').value);
     let description = document.querySelector('#description').value;
 
-    inventory.add(position, name, cost, stock, description);
-    document.querySelector('#code').value = inventory.counterID;
+    if (!inventory.add(new Product(code, name, cost, stock, description)))
+        alert('El código ya existe, por favor ingrese otro');
 });
 //Button query
 document.querySelector('#btnQuery').addEventListener('click', () => {
-    let product = inventory.query(document.querySelector('#queryByCode').value);
-    document.querySelector('#productFound').innerHTML = product;
+    let tagDiv = document.querySelector('#productFound');
+    let code = Number(document.querySelector('#queryByCode').value);
+
+    tagDiv = inventory.query(code).toString();
 });
 //Button delete
 document.querySelector('#btnDelete').addEventListener('click', () => {
-    inventory.delete(document.querySelector('#deleteByCode').value);
-    document.querySelector('#code').value = inventory.counterID;
+    let code = Number(document.querySelector('#deleteByCode').value);
+    if (inventory.delete(code))
+        alert('Producto eliminado correctamente');
+    else
+        alert('Producto no encontrado');
 });
 //Button create report
 document.querySelector('#btnCreateReport').addEventListener('click', () => {
-    inventory.createReport();
+    tagArticle.innerHTML = '';
+    for (let i = 0; i < inventory.top + 1; i++) {
+        let tagP = document.createElement('p');
+        tagP.innerHTML = inventory.structure[i].toString();
+        tagArticle.appendChild(tagP);
+    }
 });

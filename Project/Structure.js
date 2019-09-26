@@ -1,92 +1,69 @@
 import Product from "./Product.js";
 
 export default class Structure {
-    constructor(struture = new Array(), tagArticle) {
+    constructor(struture = new Array()) {
         this._structure = struture;
-        this._tagArticle = tagArticle;
-        this._counterID = 1;
+        this._top = -1;
     }
 
-    get struture() {
+    get structure() {
         return this._structure;
     }
 
-    get counterID() {
-        return this._counterID;
+    get top() {
+        return this._top;
     }
 
-    add(position, name, cost, stock, description) {
-        if (position === '' || position === (this._structure.length + 1).toString()) {
-            this._structure.push(new Product(this._counterID, name, cost, stock, description));
-            this._counterID++;
-            alert('Producto agregado correctamente');
-        } else if (parseInt(position) > 0 && parseInt(position) < this._structure.length) {
-            for (let i = this._structure.length; i >= parseInt(position); i--) {
-                this._structure[i] = this._structure[i - 1];
-            }
-            this._structure[parseInt(position) - 1] = new Product(this._counterID, name, cost, stock, description);
-            this._counterID++;
-            alert('Producto agregado correctamente');
+    add(objProduct) {
+        if (this._searchIndexByCode(objProduct.code) === -1) {
+            this._structure[this._top + 1] = objProduct;
+            this._top++;
+            return true;
         } else
-            alert('Posicion no válida');
+            return false;
     }
 
     query(code) {
-        code = parseInt(code);
-        let productFound = '';
-        if (this._isCodeExist(code)) {
-            this._structure.forEach(product => {
-                if (product.code === code) {
-                    productFound = product;
-                    return;
-                }
-            });
-        } else {
-            alert('No se ha podido encontrar el producto');
-        }
-
-        return productFound;
+        let index = this._searchIndexByCode(code);
+        if (index === -1)
+            return this._structure[index];
+        else
+            return -1;
     }
 
     delete(code) {
-        code = parseInt(code);
-        if (this._isCodeExist(code)) {
-            if (code != this.struture.length) {
-                for (let i = code - 1; i < this._structure.length - 1; i++) {
-                    this._structure[i] = this._structure[i + 1];
+        this._top--;
+    }
+
+    _searchIndexByCode(code) {
+        if (this._top > 0) {
+            let min = 0, max = this._top, position = -1, mediumPosition;
+            let count = 0;
+            while (position === -1 && count < 15 && mediumPosition != 0) {
+                mediumPosition = Math.trunc((max + min) / 2);
+                if (mediumPosition != 0) {
+                    if (code < this._structure[mediumPosition].code)
+                        max = mediumPosition - 1;
+                    else if (code > this._structure[mediumPosition].code)
+                        min = mediumPosition + 1;
+                    else
+                        position = mediumPosition;
+                } else {
+                    if (this._structure[max].code === code)
+                        position = max;
+                    else if (this._structure[min].code === code)
+                        position = min;
                 }
-                this._structure.pop();
-            } else
-                this._structure.pop();
-            alert('Se ha eliminado el producto correctamente');
-        } else {
-            alert('El código ingresado no existe, por favor verifique de nuevo');
-        }
-    }
-
-    _isCodeExist(code) {
-        let exist = false;
-        for (let i = 0; i < this._structure.length; i++) {
-            if (this._structure[i].code === code) {
-                exist = true;
-                break;
+                count++;
             }
-        }
+            return position;
 
-        return exist;
-    }
-
-    createReport() {//duda, preguntar si esta funcion debería ir aquí o en el main
-        this._tagArticle.innerHTML = '';
-        let tagP = new Array();
-        //Make tags P
-        for (let i = 0; i < this._structure.length; i++) {
-            tagP[i] = document.createElement('p');
-        }
-
-        for (let i = 0; i < this._structure.length; i++) {
-            tagP[i].innerHTML = this._structure[i].toString();
-            this._tagArticle.appendChild(tagP[i]);
-        }
+        } else if (this._top === 0) {
+            if (this._structure[0].code === code)
+                return 0;
+            else
+                return -1;
+        } else
+            return -1;
     }
 }
